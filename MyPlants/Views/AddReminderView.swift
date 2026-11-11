@@ -1,8 +1,12 @@
+
 import SwiftUI
 
 struct AddReminderView: View {
+
     @Environment(\.dismiss) private var dismiss
+
     @StateObject private var viewModel: AddReminderViewModel
+
     @State private var isShowingDeleteConfirmation = false
 
     private let plant: PlantReminder?
@@ -17,18 +21,20 @@ struct AddReminderView: View {
         self.plant = plant
         self.onSave = onSave
         self.onDelete = onDelete
+
         _viewModel = StateObject(
             wrappedValue: AddReminderViewModel(plant: plant)
         )
     }
 
     var body: some View {
+
         VStack(spacing: 28) {
+
             header
             plantNameField
             roomAndLightFields
             wateringFields
-
             deleteButton
 
             Spacer(minLength: 0)
@@ -37,7 +43,6 @@ struct AddReminderView: View {
         .padding(.top, 24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AppColors.background.ignoresSafeArea())
-        .preferredColorScheme(.dark)
         .confirmationDialog(
             "Delete Reminder?",
             isPresented: $isShowingDeleteConfirmation,
@@ -54,13 +59,16 @@ struct AddReminderView: View {
     }
 
     private var header: some View {
+
         HStack {
+
             Button {
                 dismiss()
             } label: {
+
                 Image(systemName: "xmark")
                     .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(AppColors.primaryText)
                     .frame(width: 44, height: 44)
                     .background(AppColors.surface, in: Circle())
             }
@@ -70,15 +78,19 @@ struct AddReminderView: View {
 
             Text(viewModel.isEditing ? "Edit Reminder" : "Set Reminder")
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(AppColors.primaryText)
 
             Spacer()
 
             Button {
+
                 guard let reminder = viewModel.makeReminder() else { return }
+
                 onSave(reminder)
                 dismiss()
+
             } label: {
+
                 Image(systemName: "checkmark")
                     .font(.system(size: 20, weight: .medium))
                     .foregroundStyle(.white)
@@ -92,13 +104,15 @@ struct AddReminderView: View {
     }
 
     private var plantNameField: some View {
+
         HStack(spacing: 8) {
+
             Text("Plant Name")
-                .foregroundStyle(.white)
+                .foregroundStyle(AppColors.primaryText)
 
             TextField("Pothos", text: $viewModel.plantName)
                 .textInputAutocapitalization(.words)
-                .foregroundStyle(.white)
+                .foregroundStyle(AppColors.primaryText)
         }
         .font(.system(size: 16))
         .padding(.horizontal, 20)
@@ -107,7 +121,9 @@ struct AddReminderView: View {
     }
 
     private var roomAndLightFields: some View {
+
         VStack(spacing: 0) {
+
             selectionRow(
                 title: "Room",
                 systemImage: "paperplane",
@@ -126,11 +142,16 @@ struct AddReminderView: View {
             )
         }
         .padding(.horizontal, 18)
-        .background(AppColors.surface, in: RoundedRectangle(cornerRadius: 28))
+        .background(
+            AppColors.surface,
+            in: RoundedRectangle(cornerRadius: 28)
+        )
     }
 
     private var wateringFields: some View {
+
         VStack(spacing: 0) {
+
             selectionRow(
                 title: "Watering Days",
                 systemImage: "drop",
@@ -149,15 +170,23 @@ struct AddReminderView: View {
             )
         }
         .padding(.horizontal, 18)
-        .background(AppColors.surface, in: RoundedRectangle(cornerRadius: 28))
+        .background(
+            AppColors.surface,
+            in: RoundedRectangle(cornerRadius: 28)
+        )
     }
 
     @ViewBuilder
     private var deleteButton: some View {
+
         if plant != nil, onDelete != nil {
+
             Button(role: .destructive) {
+
                 isShowingDeleteConfirmation = true
+
             } label: {
+
                 Text("Delete Reminder")
                     .font(.system(size: 16))
                     .foregroundStyle(.red)
@@ -178,20 +207,26 @@ struct AddReminderView: View {
         selection: Binding<String>,
         options: [String]
     ) -> some View {
+
         Menu {
+
             ForEach(options, id: \.self) { option in
+
                 Button(option) {
                     selection.wrappedValue = option
                 }
             }
+
         } label: {
+
             HStack(spacing: 10) {
+
                 Image(systemName: systemImage)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(AppColors.primaryText)
                     .frame(width: 18)
 
                 Text(title)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(AppColors.primaryText)
 
                 Spacer()
 
@@ -208,4 +243,21 @@ struct AddReminderView: View {
         }
         .buttonStyle(.plain)
     }
+}
+
+#Preview("Add Reminder") {
+    AddReminderView(onSave: { _ in })
+}
+
+#Preview("Edit Reminder") {
+    AddReminderView(
+        plant: PlantReminder(
+            name: "Pothos",
+            room: "Bedroom",
+            light: "Full sun",
+            waterAmount: "20–50 ml"
+        ),
+        onSave: { _ in },
+        onDelete: { _ in }
+    )
 }
