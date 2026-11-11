@@ -1,10 +1,8 @@
-
 import SwiftUI
 
 struct PlantListView: View {
 
     @StateObject private var viewModel = PlantListViewModel()
-
     @State private var isShowingAddReminder = false
     @State private var plantToEdit: PlantReminder?
 
@@ -17,7 +15,6 @@ struct PlantListView: View {
     }
 
     var body: some View {
-
         ZStack(alignment: .bottomTrailing) {
 
             AppColors.background
@@ -26,7 +23,6 @@ struct PlantListView: View {
             if hasCreatedFirstReminder {
 
                 VStack(spacing: 0) {
-
                     screenHeader
 
                     Rectangle()
@@ -57,8 +53,9 @@ struct PlantListView: View {
         }
     }
 
-    private var reminderSheet: some View {
+    // MARK: - Reminder Sheet
 
+    private var reminderSheet: some View {
         Group {
 
             if let plant = plantToEdit {
@@ -85,10 +82,10 @@ struct PlantListView: View {
         }
     }
 
+    // MARK: - Header
+
     private var screenHeader: some View {
-
         HStack {
-
             Text("My Plants 🌱")
                 .font(AppTypography.screenTitle)
                 .foregroundStyle(AppColors.primaryText)
@@ -100,10 +97,10 @@ struct PlantListView: View {
         .padding(.bottom, 18)
     }
 
+    // MARK: - Empty State
+
     private var emptyState: some View {
-
         VStack {
-
             Spacer()
 
             Text("No reminders set yet..")
@@ -115,10 +112,10 @@ struct PlantListView: View {
         .frame(maxWidth: .infinity)
     }
 
+    // MARK: - All Done State
+
     private var allDoneState: some View {
-
         VStack(spacing: 12) {
-
             Spacer()
 
             Image("PlantMascotWinking")
@@ -144,8 +141,9 @@ struct PlantListView: View {
         .frame(maxWidth: .infinity)
     }
 
-    private var plantsContent: some View {
+    // MARK: - Plants Content
 
+    private var plantsContent: some View {
         VStack(spacing: 0) {
 
             ProgressBarView(
@@ -156,7 +154,6 @@ struct PlantListView: View {
             .padding(.bottom, 24)
 
             List {
-
                 ForEach(viewModel.plants) { plant in
 
                     PlantRowView(
@@ -194,15 +191,13 @@ struct PlantListView: View {
         }
     }
 
+    // MARK: - Add Button
+
     private var addButton: some View {
-
         Button {
-
             plantToEdit = nil
             isShowingAddReminder = true
-
         } label: {
-
             addButtonIcon
         }
         .buttonStyle(.plain)
@@ -233,7 +228,10 @@ struct PlantListView: View {
                 .font(.system(size: 22, weight: .medium))
                 .foregroundStyle(.white)
                 .frame(width: 44, height: 44)
-                .background(Color(hex: 0x338069), in: Circle())
+                .background(
+                    Color(hex: 0x338069),
+                    in: Circle()
+                )
         }
     }
 }
